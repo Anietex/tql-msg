@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
@@ -16,27 +17,39 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+
+
+
+
+Route::middleware('auth')->get('/', function () {
     return view('pages.index');
 });
 
-Route::prefix('admins')->group(function (){
-    Route::get('/', [AdminController::class, 'index'])->name('admins.list');
-    Route::get('/create', [AdminController::class, 'create'])->name('admins.create');
-    Route::get('/edit/{id}', [AdminController::class, 'edit'])->name('admins.edit');
-
-
+Route::middleware('guest')->group(function (){
+    Route::get('/login',[AuthController::class,'show'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login-user');
 });
 
-Route::prefix('companies')->group(function (){
-    Route::get('/', [CompanyController::class, 'index'])->name('companies.list');
-    Route::get('/create', [CompanyController::class, 'create'])->name('companies.create');
-    Route::get('/edit/{id}', [CompanyController::class, 'edit'])->name('companies.edit');
+Route::middleware('auth')->group(function () {
+    Route::prefix('admins')->group(function (){
+        Route::get('/', [AdminController::class, 'index'])->name('admins.list');
+        Route::get('/create', [AdminController::class, 'create'])->name('admins.create');
+        Route::get('/edit/{id}', [AdminController::class, 'edit'])->name('admins.edit');
+    });
+
+    Route::prefix('companies')->group(function (){
+        Route::get('/', [CompanyController::class, 'index'])->name('companies.list');
+        Route::get('/create', [CompanyController::class, 'create'])->name('companies.create');
+        Route::get('/edit/{id}', [CompanyController::class, 'edit'])->name('companies.edit');
+    });
+
+    Route::prefix('employees')->group(function (){
+        Route::get('/', [EmployeeController::class, 'index'])->name('employees.list');
+        Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
+        Route::get('/edit/{id}', [EmployeeController::class, 'edit'])->name('employees.edit');
+    });
 });
 
-Route::prefix('employees')->group(function (){
-    Route::get('/', [EmployeeController::class, 'index'])->name('employees.list');
-    Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
-    Route::get('/edit/{id}', [EmployeeController::class, 'edit'])->name('employees.edit');
 
-});
+
+
