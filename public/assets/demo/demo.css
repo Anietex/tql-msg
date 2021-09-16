@@ -191,3 +191,7 @@
 .content{
     height: 100vh;
 }
+.form-group input[type=file] {
+    opacity: 1;
+    position: relative;
+}

@@ -29,6 +29,10 @@ Route::prefix('admins')->group(function (){
 
 Route::prefix('companies')->group(function (){
     Route::get('/', [CompanyController::class, 'index'])->name('companies.list');
+    Route::get('/create', [CompanyController::class, 'create'])->name('companies.create');
+    Route::get('/edit/{id}', [CompanyController::class, 'edit'])->name('companies.edit');
+
+
 });
 
 Route::prefix('employees')->group(function (){

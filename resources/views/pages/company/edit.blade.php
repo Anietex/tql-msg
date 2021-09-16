@@ -9,7 +9,7 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col-md-6">
-                            <h4 class="card-title">Add Company</h4>
+                            <h4 class="card-title">Edit Company</h4>
                         </div>
 
                     </div>
@@ -35,7 +35,7 @@
                                 </div>
 
                                 <div>
-                                    <button class="btn btn-primary">Save</button>
+                                    <button class="btn btn-primary">Update</button>
                                 </div>
                             </form>
                         </div>
