@@ -187,3 +187,7 @@
   outline: none;
   display: none;
 }
+
+.content{
+    height: 100vh;
+}
