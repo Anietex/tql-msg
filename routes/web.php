@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,10 +32,11 @@ Route::prefix('companies')->group(function (){
     Route::get('/', [CompanyController::class, 'index'])->name('companies.list');
     Route::get('/create', [CompanyController::class, 'create'])->name('companies.create');
     Route::get('/edit/{id}', [CompanyController::class, 'edit'])->name('companies.edit');
-
-
 });
 
 Route::prefix('employees')->group(function (){
-    Route::get('/', [CompanyController::class, 'index'])->name('employees.list');
+    Route::get('/', [EmployeeController::class, 'index'])->name('employees.list');
+    Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
+    Route::get('/edit/{id}', [EmployeeController::class, 'edit'])->name('employees.edit');
+
 });

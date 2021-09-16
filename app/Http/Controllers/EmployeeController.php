@@ -23,7 +23,7 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        //
+        return  response()->view("pages.employee.create");
     }
 
     /**
@@ -45,7 +45,6 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**
@@ -56,7 +55,8 @@ class EmployeeController extends Controller
      */
     public function edit($id)
     {
-        //
+        return  response()->view("pages.employee.edit");
+
     }
 
     /**
