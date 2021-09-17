@@ -25,11 +25,12 @@ class EmployeeController extends Controller
             $employees = Employee::paginate(10);
         }else if($user->role->name === 'admin'){
             $employees = Employee::query()
-                ->join('companies', 'company_id', '=','id')
+                ->join('companies', 'company_id', '=','companies.id')
                 ->where('created_by', $user->id)
+                ->select(['employees.*'])
                 ->paginate(10);
         }else if($user->role->name === 'company'){
-            $employees = Employee::where('company', $user->company->id)->paginate();
+            $employees = Employee::where('company_id', $user->company->id)->paginate();
         }
 
         return  response()->view("pages.employee.index",['employees' => $employees]);
