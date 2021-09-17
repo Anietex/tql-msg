@@ -32,20 +32,23 @@
 
                             </thead>
                             <tbody>
+
+                            @foreach($admins as $admin)
                             <tr>
                                 <td>
-                                    Dakota Rice
+                                    {{$admin->first_name}}
                                 </td>
                                 <td>
-                                    dakato@mail.com
+                                    {{$admin->email}}
                                 </td>
                                 <td>
                                    <div class="btn-group btn-group-sm">
-                                       <a href="{{route('admins.edit', 1)}}" class="btn btn-primary">Edit</a>
+                                       <a href="{{route('admins.edit', $admin->id)}}" class="btn btn-primary">Edit</a>
                                        <button class="btn btn-danger">Delete</button>
                                    </div>
                                 </td>
                             </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>

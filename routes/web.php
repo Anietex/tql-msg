@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admins.list');
         Route::get('/create', [AdminController::class, 'create'])->name('admins.create');
         Route::get('/edit/{id}', [AdminController::class, 'edit'])->name('admins.edit');
+        Route::post('/save',[AdminController::class, 'store'])->name('admins.save');
     });
 
     Route::prefix('companies')->group(function (){
