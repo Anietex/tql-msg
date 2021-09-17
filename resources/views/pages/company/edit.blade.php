@@ -17,21 +17,53 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-8 mx-auto pb-5">
-                            <form method="post">
+
+                            @if(session()->has('success'))
+                                <div class="alert alert-success">
+                                    {{session('success')}}
+                                </div>
+                            @endif
+
+
+                            @if(session()->has('error'))
+                                <div class="alert alert-danger">
+                                    {{session('error')}}
+                                </div>
+                            @endif
+
+                            <form method="post" action="{{ route('companies.update', $company->id)}} "  enctype="multipart/form-data">
                                 @csrf
+                                @method('PATCH')
                                 <div class="form-group">
                                     <label for="name">Name</label>
-                                    <input type="text" id="name" name="name" class="form-control">
+                                    <input type="text" value="{{ $company->name }}" id="name" name="name" class="form-control @error('name') is-invalid @enderror">
+                                    @error('name')
+                                    <small class="invalid-feedback">{{$errors->first('name')}}</small>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input type="text" id="email" name="email" class="form-control">
+                                    <input type="text" value="{{ $company->email }}" id="email" name="email" class="form-control @error('email') is-invalid @enderror">
+                                    @error('email')
+                                    <small class="invalid-feedback">{{$errors->first('email')}}</small>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="website">Website</label>
+                                    <input type="url" value="{{ $company->website }}" id="email" name="website" class="form-control @error('website') is-invalid @enderror">
+                                    @error('website')
+                                    <small class="invalid-feedback">{{$errors->first('website')}}</small>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label" for="logo">Logo</label>
-                                    <input type="file" id="logo" name="logo">
+                                    <input type="file" accept="image/*" id="logo" name="logo" class="@error('logo') is-invalid @enderror">
+                                    @error('logo')
+                                    <small class="invalid-feedback">{{$errors->first('logo')}}</small>
+                                    @enderror
                                 </div>
 
                                 <div>

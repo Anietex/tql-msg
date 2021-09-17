@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateCompanyRequest;
+use App\Http\Requests\UpdateAdminRequest;
+use App\Http\Requests\UpdateCompanyRequest;
 use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
@@ -84,7 +87,9 @@ class CompanyController extends Controller
      */
     public function edit($id)
     {
-        return  response()->view("pages.company.edit");
+        $company = Company::find($id);
+
+        return  response()->view("pages.company.edit",[ 'company' => $company]);
     }
 
     /**
@@ -92,11 +97,28 @@ class CompanyController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCompanyRequest $request, $id)
     {
-        //
+        $companyData = $request->only(['name','email', 'website']);
+
+        $company = Company::find($id);
+        if($request->hasFile('logo')){
+            $companyData['logo'] = $request->file('logo')->storePublicly('public/logo', '');
+            if($company->logo){
+                Storage::disk('public')->delete($company->logo);
+            }
+        }
+        $updated = $company->update($companyData);
+
+        if($updated){
+            return back()
+                ->with('success', 'Company updated successfully ');
+        }else{
+            return back()
+                ->with('error', 'Unable to update company at the moment');
+        }
     }
 
     /**
