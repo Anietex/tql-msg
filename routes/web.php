@@ -30,6 +30,9 @@ Route::middleware('guest')->group(function (){
     Route::post('/login', [AuthController::class, 'login'])->name('login-user');
 });
 
+Route::middleware('auth')->get('/logout',[AuthController::class, 'logout']);
+
+
 Route::middleware('auth')->group(function () {
 
     Route::prefix('admins')->group(function (){

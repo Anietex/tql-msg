@@ -9,17 +9,15 @@ use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
-
     public function show(){
         return response()->view('pages.auth.login');
     }
-
     public function login(LoginRequest $request) {
 
         $credentials = $request->only(['email','password']);
 
         if(Auth::attempt($credentials)){
-            return redirect()->intended('dashboard');
+            return redirect()->intended('/');
         }else{
             return redirect('/login')->withInput()->with('message','Invalid email or password');
         }
