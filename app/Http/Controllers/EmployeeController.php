@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Employee;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EmployeeController extends Controller
 {
@@ -17,7 +18,21 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        return  response()->view("pages.employee.index");
+        $user = Auth::user();
+        $employees = [];
+
+        if($user->role->name === 'superadmin'){
+            $employees = Employee::paginate(10);
+        }else if($user->role->name === 'admin'){
+            $employees = Employee::query()
+                ->join('companies', 'company_id', '=','id')
+                ->where('created_by', $user->id)
+                ->paginate(10);
+        }else if($user->role->name === 'company'){
+            $employees = Employee::where('company', $user->company->id)->paginate();
+        }
+
+        return  response()->view("pages.employee.index",['employees' => $employees]);
     }
 
     /**

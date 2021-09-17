@@ -41,27 +41,29 @@
                             </th>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>
-                                    Dakota
-                                </td>
-                                <td>
-                                    Rice
-                                </td>
-                                <td>
-                                    Rice@mail.com
-                                </td>
-                                <td>0000500505050</td>
-                                <td>
-                                    Oud-Turnhout
-                                </td>
-                                <td class="text-right">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="{{route('employees.edit', 1)}}" class="btn btn-primary">Edit</a>
-                                        <button class="btn btn-danger">Delete</button>
-                                    </div>
-                                </td>
-                            </tr>
+                           @foreach($employees as $employee)
+                               <tr>
+                                   <td>
+                                       {{ $employee->first_name }}
+                                   </td>
+                                   <td>
+                                       {{ $employee->last_name }}
+                                   </td>
+                                   <td>
+                                       {{ $employee->email }}
+                                   </td>
+                                   <td>{{ $employee->phone_no }}</td>
+                                   <td>
+                                       {{ $employee->company->name }}
+                                   </td>
+                                   <td class="text-right">
+                                       <div class="btn-group btn-group-sm">
+                                           <a href="{{route('employees.edit', $employee->id)}}" class="btn btn-primary">Edit</a>
+                                           <button class="btn btn-danger">Delete</button>
+                                       </div>
+                                   </td>
+                               </tr>
+                           @endforeach
                             </tbody>
                         </table>
                     </div>
