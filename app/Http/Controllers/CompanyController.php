@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateCompanyRequest;
 use App\Models\Company;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
@@ -116,6 +116,9 @@ class CompanyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $company =  Company::find($id);
+        $company->user->delete();
+        $company->delete();
+        return back()->with('success', 'Company deleted successfully');
     }
 }
