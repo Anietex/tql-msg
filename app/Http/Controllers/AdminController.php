@@ -56,7 +56,7 @@ class AdminController extends Controller
         }
 
 
-        $password = Str::random(5);
+        $password = Str::random(6);
         $userData = [
             'first_name' => $admin['name'],
             'email' => $admin['email'],

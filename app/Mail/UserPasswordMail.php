@@ -11,14 +11,16 @@ class UserPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    protected $password;
+
     /**
      * Create a new message instance.
      *
-     * @return void
+     * @param string $passwod
      */
-    public function __construct()
+    public function __construct(string $password)
     {
-        //
+        $this->password = $password;
     }
 
     /**
@@ -28,6 +30,6 @@ class UserPasswordMail extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->view('mails.password-notification',['password' => $this->password]);
     }
 }

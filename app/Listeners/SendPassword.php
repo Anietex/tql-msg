@@ -3,8 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\UserCreated;
+use App\Mail\UserPasswordMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Support\Facades\Mail;
 
 class SendPassword
 {
@@ -28,7 +30,7 @@ class SendPassword
     {
         $user = $event->user;
         $password = $event->password;
-
-        dd($password);
+        Mail::to($user->email)
+            ->send(new UserPasswordMail($password));
     }
 }
