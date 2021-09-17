@@ -21,34 +21,45 @@
                     <div class="table-responsive">
                         <table class="table">
                             <thead class=" text-primary">
-                            <th></th>
-                            <th>
-                                Name
-                            </th>
-                            <th>
-                                Email
-                            </th>
-                            <th>
-                                **
-                            </th>
-
+                            <tr>
+                                <th></th>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Email
+                                </th>
+                                <th>Website</th>
+                                <th>Created by</th>
+                                <th>
+                                    **
+                                </th>
+                            </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td></td>
-                                <td>
-                                    Dakota Rice
-                                </td>
-                                <td>
-                                    dakato@mail.com
-                                </td>
-                                <td>
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="{{route('companies.edit', 1)}}" class="btn btn-primary">Edit</a>
-                                        <button class="btn btn-danger">Delete</button>
-                                    </div>
-                                </td>
-                            </tr>
+                            @foreach($companies as $company)
+                                <tr>
+                                    <td></td>
+                                    <td>
+                                        {{$company->name}}
+                                    </td>
+                                    <td>
+                                        {{$company->email}}
+                                    </td>
+                                    <td>
+                                        {{$company->website}}
+                                    </td>
+                                    <td>
+                                        {{$company->createdBy->first_name}}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{route('companies.edit', $company->id)}}" class="btn btn-primary">Edit</a>
+                                            <button class="btn btn-danger">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>

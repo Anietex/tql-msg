@@ -6,6 +6,7 @@ use App\Http\Requests\CreateCompanyRequest;
 use App\Models\Company;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
@@ -16,7 +17,15 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        return  response()->view("pages.company.index");
+        $user = auth()->user();
+
+        if($user->role->name === 'superamdin'){
+            $companies = Company::paginate(10);
+        }else{
+            $companies = Company::where('created_by', $user->id)->paginate(10);
+        }
+
+        return  response()->view("pages.company.index", ['companies' => $companies]);
 
     }
 
@@ -46,20 +55,24 @@ class CompanyController extends Controller
                 ->with('error', 'No company role created please run seeder');
         }
         $user = $this->createUser($request->email, $companyRole->id);
-        $companyData = $request->only(['name','email']);
+        $companyData = $request->only(['name','email', 'website']);
+
+
         if($request->hasFile('logo')){
-            $companyData['logo'] = $request->file('logo')->storePublicly('logo');
+            $companyData['logo'] = $request->file('logo')->storePublicly('public/logo', '');
         }
+
         $companyData['created_by'] = auth()->user()->id;
         $companyData['user_id'] = $user->id;
-       $company =  Company::create($companyData);
-       if($company){
-           return back()
-               ->with('success', 'Company created successfully and password has been sent to user');
-       }else{
-           return back(500)
-               ->with('error', 'Unable to create company at the moment');
-       }
+        $company =  Company::create($companyData);
+
+        if($company){
+            return back()
+                ->with('success', 'Company created successfully and password has been sent to user');
+        }else{
+            return back(500)
+                ->with('error', 'Unable to create company at the moment');
+        }
     }
 
     /**
