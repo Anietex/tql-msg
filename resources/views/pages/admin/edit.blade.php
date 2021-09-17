@@ -17,16 +17,36 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-8 mx-auto pb-5">
-                            <form method="post">
+
+                            @if(session()->has('success'))
+                                <div class="alert alert-success">
+                                    {{session('success')}}
+                                </div>
+                            @endif
+
+
+                            @if(session()->has('error'))
+                                <div class="alert alert-danger">
+                                    {{session('error')}}
+                                </div>
+                            @endif
+                            <form method="post" action="{{route('admins.update', $admin->id)}}">
                                 @csrf
+                                @method('PATCH')
                                 <div class="form-group">
                                     <label for="name">Name</label>
-                                    <input type="text" id="name" name="name" class="form-control">
+                                    <input type="text" value="{{ $admin->first_name }}" id="name" name="name" class="form-control @error('name') is-invalid @enderror">
+                                    @error('name')
+                                    <small class="invalid-feedback">Name is required</small>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input type="text" id="email" name="email" class="form-control">
+                                    <input type="text" value="{{ $admin->email }}" id="email" name="email" class="form-control @error('email') is-invalid @enderror">
+                                    @error('email')
+                                    <small class="invalid-feedback">{{$errors->first('email')}}</small>
+                                    @enderror
                                 </div>
 
                                 <div>

@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/edit/{id}', [AdminController::class, 'edit'])->name('admins.edit');
         Route::post('/save',[AdminController::class, 'store'])->name('admins.save');
         Route::delete('/{id}', [AdminController::class, 'destroy']);
+        Route::patch('/{id}', [AdminController::class, 'update'])->name('admins.update');
     });
 
     Route::prefix('companies')->group(function (){

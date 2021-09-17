@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\UserCreated;
 use App\Http\Requests\CreateAdminRequest;
+use App\Http\Requests\UpdateAdminRequest;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Contracts\Foundation\Application;
@@ -86,7 +87,8 @@ class AdminController extends Controller
      */
     public function edit($id)
     {
-        return  response()->view("pages.admin.edit");
+        $admin = User::find($id);
+        return  response()->view("pages.admin.edit", ['admin' => $admin]);
     }
 
     /**
@@ -94,11 +96,25 @@ class AdminController extends Controller
      *
      * @param Request $request
      * @param  int  $id
-     * @return Response
+     * @return RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(UpdateAdminRequest $request, $id)
     {
-        //
+        $admin = $request->safe()->only(['name', 'email']);
+
+        $updated = User::find($id)->update([
+            'first_name' => $admin['name'],
+            'email'      => $admin['email']
+        ]);
+
+        if($updated){
+            return back()
+                ->with('success', 'Admin updated successfully ');
+        }else{
+            return back()
+                ->with('error', 'Unable to update admin at the moment');
+        }
+
     }
 
     /**
