@@ -64,10 +64,16 @@ class AdminController extends Controller
         ];
 
         $user = User::create($userData);
+        if($user){
+            UserCreated::dispatch($user, $password);
+            return back()
+                ->with('success', 'Admin created successfully and password has been sent to user');
+        }else{
+            return back()
+                ->with('error', 'Unable to create admin at the moment');
+        }
 
-        UserCreated::dispatch($user, $password);
-        return back()
-            ->with('success', 'Admin create success and password has been sent to user');
+
 
     }
 

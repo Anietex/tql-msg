@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateCompanyRequest;
+use App\Models\Company;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -31,12 +34,32 @@ class CompanyController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param CreateCompanyRequest $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(CreateCompanyRequest $request)
     {
-        //
+        $companyRole = Role::where('name', 'company')->first();
+
+        if(!$companyRole){
+            return back()
+                ->with('error', 'No company role created please run seeder');
+        }
+        $user = $this->createUser($request->email, $companyRole->id);
+        $companyData = $request->only(['name','email']);
+        if($request->hasFile('logo')){
+            $companyData['logo'] = $request->file('logo')->storePublicly('logo');
+        }
+        $companyData['created_by'] = auth()->user()->id;
+        $companyData['user_id'] = $user->id;
+       $company =  Company::create($companyData);
+       if($company){
+           return back()
+               ->with('success', 'Company created successfully and password has been sent to user');
+       }else{
+           return back(500)
+               ->with('error', 'Unable to create company at the moment');
+       }
     }
 
     /**
