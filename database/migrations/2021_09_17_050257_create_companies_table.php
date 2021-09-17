@@ -23,6 +23,7 @@ class CreateCompaniesTable extends Migration
             $table->uuid('created_by');
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
