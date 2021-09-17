@@ -49,6 +49,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [EmployeeController::class, 'index'])->name('employees.list');
         Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
         Route::get('/edit/{id}', [EmployeeController::class, 'edit'])->name('employees.edit');
+        Route::post('/save', [EmployeeController::class, 'store'])->name('employees.save');
     });
 });
 

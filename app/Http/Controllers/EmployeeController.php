@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateEmployeeRequest;
+use App\Models\Company;
+use App\Models\Employee;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -23,18 +27,48 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        return  response()->view("pages.employee.create");
+
+        $user = auth()->user();
+        if($user->role->name === 'superamdin'){
+            $companies = Company::paginate(10);
+        }else{
+            $companies = Company::where('created_by', $user->id)->paginate(10);
+        }
+
+        return  response()->view("pages.employee.create", ['companies' => $companies]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param CreateEmployeeRequest $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(CreateEmployeeRequest $request)
     {
-        //
+
+        $employeeRole = Role::where('name', 'employee')->first();
+
+        if(!$employeeRole){
+            return back()
+                ->with('error', 'No employee role created please run seeder');
+        }
+        $user = $this->createUser($request->email, $employeeRole->id);
+
+
+        $employeeData = $request->only(['first_name','last_name', 'email','phone_no', 'company_id']);
+        $employeeData['user_id'] = $user->id;
+        $employee = Employee::create($employeeData);
+
+        if($employee){
+            return back()
+                ->with('success', 'Employee created successfully and password has been sent to user');
+        }else{
+            return back(500)
+                ->with('error', 'Unable to create employee at the moment');
+        }
+
+
     }
 
     /**

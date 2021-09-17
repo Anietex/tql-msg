@@ -18,7 +18,6 @@ class CompanyController extends Controller
     public function index()
     {
         $user = auth()->user();
-
         if($user->role->name === 'superamdin'){
             $companies = Company::paginate(10);
         }else{
