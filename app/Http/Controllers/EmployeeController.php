@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateEmployeeRequest;
+use App\Http\Requests\UpdateCompanyRequest;
+use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Company;
 use App\Models\Employee;
 use App\Models\Role;
@@ -87,25 +89,26 @@ class EmployeeController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-    }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param Employee $employee
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        return  response()->view("pages.employee.edit");
+
+        $employee = Employee::find($id);
+
+        $user = auth()->user();
+        if($user->role->name === 'superadmin'){
+            $companies = Company::paginate(10);
+        }else{
+            $companies = Company::where('created_by', $user->id)->paginate(10);
+        }
+
+        return  response()->view("pages.employee.edit",[ 'employee' => $employee, 'companies' => $companies]);
 
     }
 
@@ -114,21 +117,34 @@ class EmployeeController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, $id)
+    public function update(UpdateEmployeeRequest $request, $id)
     {
-        //
+        $employee = Employee::find($id);
+        $employeeData = $request->only(['first_name','last_name', 'email','phone_no', 'company_id']);
+        $updated = $employee->update($employeeData);
+        if($updated){
+            return back()
+                ->with('success', 'Employee updated successfully ');
+        }else{
+            return back()
+                ->with('error', 'Unable to update employee at the moment');
+        }
+
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
-        //
+        $employee =  Employee::find($id);
+        $employee->user->delete();
+        $employee->delete();
+        return back()->with('success', 'Employee deleted successfully');
     }
 }

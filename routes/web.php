@@ -55,6 +55,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', [EmployeeController::class, 'create'])->name('employees.create');
         Route::get('/edit/{id}', [EmployeeController::class, 'edit'])->name('employees.edit');
         Route::post('/save', [EmployeeController::class, 'store'])->name('employees.save');
+        Route::delete('/{id}', [EmployeeController::class,'destroy']);
+        Route::patch('/{id}',[EmployeeController::class, 'update'])->name('employees.update');
     });
 });
 
